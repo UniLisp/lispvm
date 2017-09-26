@@ -1,0 +1,14 @@
+* LispVM intepreter
+
+This program inteprets LispVM bytecode, which is currently a ASCII format.
+
+Each LispVM executable starts with the magic sequence "lispvm".
+Currently, there is no header.
+Instruction arguments appear inline, since there is no memory or register access yet.
+
+** Current instruction set
+| Op   | Description                                        |
+|------+----------------------------------------------------|
+| p    | Prints the string after the op, until it hits NULL |
+| q    | Quits gracefully.                                  |
+| '\0' | Aborts execution.                                  |
