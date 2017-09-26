@@ -3,20 +3,27 @@
 #include<stdint.h>
 #include<stddef.h>
 
+unsigned char *mem;
+size_t mem_size;
+size_t load_ptr = 0;
+size_t main_ptr = 0;
+uint32_t regs[256];
+size_t ip;
 
-void
-pstream(FILE *s, char br)
+void pstream(FILE *s, char br)
 {
 	char c;
 	while ((c = getc(s)) != br) {
 		putchar(c);
 	}
 }
-
-int
-main(int argc, char **argv)
+void load(FILE *s, size_t count)
 {
-	int ip;
+	fread(&mem[load_ptr], 1, count, s);
+}
+
+int main(int argc, char **argv)
+{
 	FILE *f = fopen(argv[1], "rb");
 	fseek(f, 0, SEEK_END);
 	size_t fsize = ftell(f);
@@ -29,17 +36,56 @@ main(int argc, char **argv)
 	if ((c = getc(f)) != 'v') abort();
 	if ((c = getc(f)) != 'm') abort();
 
+	mem = malloc(1<<15);
+	mem_size = 1<<15;
+
 	while ((c = getc(f)) != 0) {
 		switch (c) {
 		case 'p':
-			pstream(f, '\0');
+			pstream(f, ';');
 			break;
 		case 'q':
 			exit(0);
+			break;
+		case '#':
+			fscanf(f, "%x;", &load_ptr);
+			break;
+		case 'l': ;
+		        size_t len;
+			fscanf(f, "%d;", &len);
+			load(f, len);
+			break;
+		case 'm':
+			fscanf(f, "%x;", &main_ptr);
+			break;
+		case 'g':
+			goto run;
+		case '%':
+			while (getc(f) != '\n') ;
 			break;
 		default:
 			;
 		}
 	}
+run:
+	ip = main_ptr;
+	while (1) {
+		switch (mem[ip++]) {
+		case 'p':
+			while (mem[ip] != ';')
+				putchar(mem[ip++]);
+			++ip;
+			break;
+		case 'q':
+			exit(0);
+			break;
+		case 0:
+			abort();
+			break;
+		default:
+			;
+		}
+	}
+	printf("main: %d", main_ptr);
 	return 0;
 }
