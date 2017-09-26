@@ -25,8 +25,8 @@ Slanted text in the format indicates a variable sized argument, regular text ini
 Instruction arguments appear inline, since there is no memory or register access yet.
 
 ### Current instruction set
-| Op   | Format | Description                                     |
-|------|--------|-------------------------------------------------|
-| p    | *string*; | Prints *string*                                 |
-| q    |        | Quits gracefully.                               |
-| '\0' |        | Aborts execution.                               |
+| Op   | Format    | Description       |
+|------|-----------|-------------------|
+| p    | *string*; | Prints *string*   |
+| q    |           | Quits gracefully. |
+| '\0' |           | Aborts execution. |
