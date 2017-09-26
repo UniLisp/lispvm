@@ -20,6 +20,7 @@ void pstream(FILE *s, char br)
 void load(FILE *s, size_t count)
 {
 	fread(&mem[load_ptr], 1, count, s);
+	load_ptr += count;
 }
 
 int main(int argc, char **argv)

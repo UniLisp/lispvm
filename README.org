@@ -1,14 +1,31 @@
 * LispVM intepreter
 
-This program inteprets LispVM bytecode, which is currently a ASCII format.
+This program inteprets LispVM bytecode, which is currently a ASCII format,
+both for the object files and the actual asm.
 
-Each LispVM executable starts with the magic sequence "lispvm".
+** Object format
+Each LispVM executable object file starts with the magic sequence "lispvm".
 Currently, there is no header.
+LispVM load instructions appear in the object, and instructs the VM how to initialise the program.
+
+Slanted text in the format indicates a variable sized argument, regular text inidcates literal text in the program.
+*** Loader ops
+| Op  | Format           | Description                                                                        |
+|-----+------------------+------------------------------------------------------------------------------------|
+| ~p~ | /string/;        | Prints the ing string until it hits ~;~                                            |
+| ~q~ |                  | Quit instead of executing the program                                              |
+| ~#~ | /hex/;           | Sets the current loading address                                                   |
+| ~m~ | /hex/;           | Initialises the instruction pointer                                                |
+| ~l~ | /decimal/;​/code/ | Loads /code/ of size /decimal/ into memory starting at the current loading address |
+| ~g~ |                  | Starts program exeuction at the already specified IP                               |
+
+
+** LispVM
 Instruction arguments appear inline, since there is no memory or register access yet.
 
-** Current instruction set
-| Op   | Description                                        |
-|------+----------------------------------------------------|
-| p    | Prints the string after the op, until it hits NULL |
-| q    | Quits gracefully.                                  |
-| '\0' | Aborts execution.                                  |
+*** Current instruction set
+| Op   | Description                                       |
+|------+---------------------------------------------------|
+| ~p~  | Prints the string after the op, until it hits ~;~ |
+| ~q~  | Quits gracefully.                                 |
+| '\0' | Aborts execution.                                 |
