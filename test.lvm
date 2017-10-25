@@ -1,5 +1,6 @@
 lispvm
 % This is an example LispVM object file, which loads a program into memory, and then executes it.
+% pretty cool huh?
 pLoading instructions into adress #100
 ;
 #100;
